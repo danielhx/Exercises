@@ -10,83 +10,83 @@ namespace Struct
 
         public static void Main()
         {
-            int CastiguriCuSchimbareDeUsa = 0;
-            int CastiguriFaraSchimbareDeUsa = 0;
-            int NrSimulari = 0;
+            int DoorChangeWins = 0;
+            int WithoutDoorChangeWins = 0;
+            int Simulations = 0;
             while (true)
             {
-                CastiguriFaraSchimbareDeUsa += Joc(false) ? 1 : 0; // Incrementeaza daca conditia este indeplinita 1:0 <=> if(true||false)
-                CastiguriCuSchimbareDeUsa += Joc(true) ? 1 : 0; // 
-                NrSimulari++;
-                if ((NrSimulari % 10) == 0) //Dupa N simulari sa afiseze Rezultatele: 
+                WithoutDoorChangeWins += Game(false) ? 1 : 0; // Incrementeaza daca conditia este indeplinita 1:0 <=> if(true||false)
+                DoorChangeWins += Game(true) ? 1 : 0; // 
+                Simulations++;
+                if ((Simulations % 10) == 0) //Dupa N simulari sa afiseze Rezultatele: 
                 {
-                    Console.WriteLine("Numar Simulari: " + NrSimulari);
-                    Console.WriteLine("Numar Castiguri Fara Schimbare De Usa: " + CastiguriFaraSchimbareDeUsa);
-                    Console.WriteLine("Procent De Castiguri Fara schimbare De Usa:  " + ((double)CastiguriFaraSchimbareDeUsa / NrSimulari) * 100);
-                    Console.WriteLine("Numar Castiguri Cu Schimbare de Usa :    " + CastiguriCuSchimbareDeUsa);
-                    Console.WriteLine("Procent Castiguri Cu Schimbare De Usa:   " + ((double)CastiguriCuSchimbareDeUsa / NrSimulari) * 100);
+                    Console.WriteLine("Number Of Simulations: " + Simulations);
+                    Console.WriteLine("Numbers Of Wins Without Door Change: " + WithoutDoorChangeWins);
+                    Console.WriteLine("Percentage of Wins Without Door Change:  " + ((double)WithoutDoorChangeWins / Simulations) * 100);
+                    Console.WriteLine("Number of Wins With Door Change :    " + DoorChangeWins);
+                    Console.WriteLine("Percentage of Wins With Door Change:   " + ((double)DoorChangeWins / Simulations) * 100);
                     Console.ReadLine();
                 }
             }
         }
 
-        static bool Joc(bool SchimbareUsa)
+        static bool Game(bool DoorChange)
         {
-            int Masina = GenereazaMasinaSiOaie(); //Genereaza Pozitia Masinii si a Oii
-            int PrimaUsa = GenereazaAlegereaPrimaUsa(); // Prima Usa Random
-            int OaieRandom = GenereazaOaieRandom(PrimaUsa, Masina); //Prezentatorul alege o Oaie random
-            int PrimaAlegere;
-            if (SchimbareUsa)
+            int Car = GenerateCarAndGoat(); //Genereaza Pozitia Masinii si a Oii
+            int PrimaUsa = GenerateFirstDoorChange(); // Prima Usa Random
+            int Goat = GenerateGoat(PrimaUsa, Car); //Prezentatorul alege o Oaie random
+            int FirstChoice;
+            if (DoorChange)
             {
-                PrimaAlegere = MontyHall.SchimbareUsa(PrimaUsa, OaieRandom); // Schimba usa dupa ce prezentatorul arata usa cu Oaie
+                FirstChoice = MontyHall.ChangeDoor(PrimaUsa, Goat); // Schimba usa dupa ce prezentatorul arata usa cu Oaie
             }
             else
             {
-                PrimaAlegere = PrimaUsa; // Mentine prima alegere: prima usa
+                FirstChoice = PrimaUsa; // Mentine prima alegere: prima usa
             }
-            return PrimaAlegere == Masina;
+            return FirstChoice == Car;
         }
 
-        static int GenereazaAlegereaPrimaUsa()
+        static int GenerateFirstDoorChange()
         {
-            int Alegere = random.Next(3); // Concurentul are de ales 3 optiuni: 1,2,3
-            return Alegere;
+            int Choice = random.Next(3); // Concurentul are de ales 3 optiuni: 1,2,3
+            return Choice;
         }
 
-        static int GenereazaMasinaSiOaie()
+        static int GenerateCarAndGoat()
         {
-            int Masina = random.Next(3); //Masina poate fi 1,2,3
-            return Masina;
+            int Car = random.Next(3); //Masina poate fi 1,2,3
+            return Car;
         }
 
-        static int GenereazaOaieRandom(int PrimaUsaAleasa,
-            int PozitiaMasinii)
+        static int GenerateGoat(int FirstDoorChosen,
+            int CarPosition)
         {
             while (true)
             {
-                int OaieRandom = random.Next(3); //Oaia poate fi 1,2,3
-                if (OaieRandom == PrimaUsaAleasa || //Oaia nu poate fi in Pozitia Masinii
-                    OaieRandom == PozitiaMasinii)
+                int RandomGoat = random.Next(3); //Oaia poate fi 1,2,3
+                if (RandomGoat == FirstDoorChosen || //Oaia nu poate fi in Pozitia Masinii
+                    RandomGoat == CarPosition)
                 {
                     continue;
                 }
-                return OaieRandom;
+                return RandomGoat;
             }
         }
 
-        static int SchimbareUsa(int PrimaUsaAleasa,
+        static int ChangeDoor(int FirstDoorChosen,
             int OaieRandom)
         {
-            int RezultatSchimbareUsa = 0;
+            int DoorChangeResult = 0;
             while (true)
             {
-                if (RezultatSchimbareUsa == PrimaUsaAleasa || //Nu schimba niciodata la prima usa aleasa
-                    RezultatSchimbareUsa == OaieRandom)
+                if (DoorChangeResult == FirstDoorChosen || //Nu schimba niciodata la prima usa aleasa
+                    DoorChangeResult == OaieRandom)
                 {
-                    RezultatSchimbareUsa++; //Incearca urmatoarea usa
+                    DoorChangeResult++; //Incearca urmatoarea usa
                     continue;
                 }
-                return RezultatSchimbareUsa;
+                return DoorChangeResult;
             }
         }
     }
